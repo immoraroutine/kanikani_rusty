@@ -41,4 +41,18 @@ mod tests {
 
         assert!(!smaller.can_hold(&larger));
     }
+
+    #[test]
+    fn it_works() -> Result<(), String> {
+        if 2 + 2 == 4 {
+            Ok(())
+        } else {
+            Err("two plus two does not equal four".to_string())
+        }
+    }
+
+    #[test]
+    fn it_works2() {
+        assert_eq!(2 + 2, 4);
+    }
 }
