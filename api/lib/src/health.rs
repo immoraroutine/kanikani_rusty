@@ -11,9 +11,7 @@ pub async fn hello_world() -> &'static str {
     "Hello, world!"
 }
 
-pub async fn version(
-    State(state): State<MyState>,
-) -> String {
+pub async fn version(State(state): State<MyState>) -> String {
     tracing::info!("Getting version!");
     let result = sqlx::query_scalar("SELECT version()")
         .fetch_one(&*state.pool)
@@ -26,5 +24,5 @@ pub async fn version(
 }
 
 pub async fn health() -> StatusCode {
-    StatusCode::OK 
+    StatusCode::OK
 }

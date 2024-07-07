@@ -1,7 +1,7 @@
+use api_lib::health::{health, hello_world, version, MyState};
 use axum::{routing::get, Router};
 use shuttle_runtime::CustomError;
 use sqlx::{Executor, PgPool};
-use api_lib::health::{hello_world, version, health, MyState};
 
 #[shuttle_runtime::main]
 async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
