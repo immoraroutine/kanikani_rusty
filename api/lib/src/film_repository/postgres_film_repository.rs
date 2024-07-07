@@ -4,6 +4,7 @@ use uuid::Uuid;
 
 use super::{FilmRepository, FilmResult};
 
+#[derive(Clone)]
 pub struct PostgresFilmRepository {
     pool: sqlx::PgPool,
 }
