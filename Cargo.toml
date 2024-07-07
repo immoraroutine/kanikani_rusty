@@ -5,3 +5,13 @@ members = [
     "shared"
 ]
 resolver = "2"
+
+[workspace.dependencies]
+sqlx = { version = "0.7", default-features = false, features = [
+    "tls-native-tls",
+    "macros",
+    "postgres",
+    "uuid",
+    "chrono",
+    "json",
+] }

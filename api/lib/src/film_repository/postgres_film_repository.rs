@@ -1,5 +1,8 @@
-use super::{FilmRepository, FilmResult};
+use async_trait::async_trait;
 use shared::models::{CreateFilm, Film};
+use uuid::Uuid;
+
+use super::{FilmRepository, FilmResult};
 
 pub struct PostgresFilmRepository {
     pool: sqlx::PgPool,
@@ -11,7 +14,7 @@ impl PostgresFilmRepository {
     }
 }
 
-#[async_trait::async_trait]
+#[async_trait]
 impl FilmRepository for PostgresFilmRepository {
     async fn get_films(&self) -> FilmResult<Vec<Film>> {
         sqlx::query_as::<_, Film>(
@@ -75,8 +78,8 @@ impl FilmRepository for PostgresFilmRepository {
         .map_err(|e| e.to_string())
     }
 
-    async fn delete_film(&self, film_id: &uuid::Uuid) -> FilmResult<uuid::Uuid> {
-        sqlx::query_scalar::<_, uuid::Uuid>(
+    async fn delete_film(&self, film_id: &uuid::Uuid) -> FilmResult<Uuid> {
+        sqlx::query_scalar::<_, Uuid>(
             r#"
       DELETE FROM films
       WHERE id = $1
