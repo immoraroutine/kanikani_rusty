@@ -1,8 +1,6 @@
 use api_lib::films::{create_film, delete_film, get_film, list_films, update_film};
 use axum::{
     extract::Extension,
-    http::StatusCode,
-    response::IntoResponse,
     routing::{delete, get, post, put},
     Router,
 };
