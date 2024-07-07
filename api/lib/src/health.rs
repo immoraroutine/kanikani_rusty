@@ -1,4 +1,4 @@
-use axum::extract::State;
+use axum::{extract::State, http::StatusCode};
 use sqlx::PgPool;
 use std::sync::Arc;
 
@@ -23,4 +23,8 @@ pub async fn version(
         Ok(version) => version,
         Err(err) => format!("Error: {}", err),
     }
+}
+
+pub async fn health() -> StatusCode {
+    StatusCode::OK 
 }
