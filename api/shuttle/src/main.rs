@@ -1,5 +1,5 @@
-use api_lib::health::{health, hello_world, version, MyState};
 use api_lib::films::{create_film, delete_film, get_film, list_films, update_film};
+use api_lib::health::{health, hello_world, version, MyState};
 use axum::{routing::get, Router};
 use shuttle_runtime::CustomError;
 use sqlx::{Executor, PgPool};
