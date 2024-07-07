@@ -69,11 +69,21 @@ checksum = "b3d1d046238990b9cf5bcde22a3fb3584ee5cf65fb2765f454ed428c7a0063da"
 [[package]]
 name = "api-lib"
 version = "0.1.0"
+dependencies = [
+ "axum 0.7.5",
+ "shuttle-axum",
+ "shuttle-runtime",
+ "shuttle-shared-db",
+ "sqlx",
+ "tokio",
+ "tracing",
+]
 
 [[package]]
 name = "api-shuttle"
 version = "0.1.0"
 dependencies = [
+ "api-lib",
  "axum 0.7.5",
  "shuttle-axum",
  "shuttle-runtime",

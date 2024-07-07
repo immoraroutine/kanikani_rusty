@@ -1,30 +1,7 @@
-use axum::{routing::get, Router, extract::State};
+use axum::{routing::get, Router};
 use shuttle_runtime::CustomError;
 use sqlx::{Executor, PgPool};
-use std::sync::Arc;
-
-async fn hello_world() -> &'static str {
-    "Hello, world!"
-}
-
-async fn version(
-    State(state): State<MyState>,
-) -> String {
-    tracing::info!("Getting version");
-    let result = sqlx::query_scalar("SELECT version()")
-        .fetch_one(&*state.pool)
-        .await;
-
-    match result {
-        Ok(version) => version,
-        Err(err) => format!("Error: {}", err),
-    }
-}
-
-#[derive(Clone)]
-struct MyState {
-    pool: Arc<PgPool>,
-}
+use api_lib::health::{hello_world, version, MyState};
 
 #[shuttle_runtime::main]
 async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
