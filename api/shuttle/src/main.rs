@@ -1,7 +1,12 @@
 use api_lib::films::{create_film, delete_film, get_film, list_films, update_film};
-use axum::{routing::{get, post, put, delete}, Router};
+use axum::{
+    extract::Extension,
+    routing::{delete, get, post, put},
+    Router,
+};
 use shuttle_runtime::CustomError;
 use sqlx::{Executor, PgPool};
+use std::sync::Arc;
 
 #[shuttle_runtime::main]
 async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
@@ -9,6 +14,8 @@ async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::Shut
         .await
         .map_err(CustomError::new)?;
     let film_repository = api_lib::film_repository::PostgresFilmRepository::new(pool);
+    let film_repository: Arc<Box<dyn api_lib::film_repository::FilmRepository>> =
+        Arc::new(Box::new(film_repository));
 
     let films_router = Router::new()
         .route("/", get(list_films))
@@ -21,7 +28,7 @@ async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::Shut
         // .route("/version", get(version))
         // .route("/health", get(health))
         .nest("/v1/films", films_router)
-        .with_state(film_repository);
+        .layer(Extension(film_repository));
 
     Ok(router.into())
 }
