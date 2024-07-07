@@ -1,12 +1,15 @@
 use api_lib::films::{create_film, delete_film, get_film, list_films, update_film};
 use axum::{
     extract::Extension,
+    http::StatusCode,
+    response::IntoResponse,
     routing::{delete, get, post, put},
     Router,
 };
 use shuttle_runtime::CustomError;
 use sqlx::{Executor, PgPool};
 use std::sync::Arc;
+use tower_http::services::ServeDir;
 
 #[shuttle_runtime::main]
 async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
@@ -24,11 +27,19 @@ async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::Shut
         .route("/:id", put(update_film))
         .route("/:id", delete(delete_film));
 
+    let api_router = Router::new()
+        .nest("/v1/films", films_router)
+        .layer(Extension(film_repository));
+
+    let static_dir = ServeDir::new("static");
+
+    println!("{:?}", static_dir);
+
     let router = Router::new()
         // .route("/version", get(version))
         // .route("/health", get(health))
-        .nest("/v1/films", films_router)
-        .layer(Extension(film_repository));
+        .nest("/api", api_router)
+        .nest_service("/static", static_dir);
 
     Ok(router.into())
 }
