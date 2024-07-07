@@ -10,6 +10,7 @@ async fn hello_world() -> &'static str {
 async fn version(
     State(state): State<MyState>,
 ) -> String {
+    tracing::info!("Getting version");
     let result = sqlx::query_scalar("SELECT version()")
         .fetch_one(&*state.pool)
         .await;
