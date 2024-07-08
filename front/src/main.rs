@@ -5,6 +5,7 @@ mod models;
 
 use components::{FilmModal, Footer, Header};
 use dioxus::prelude::*;
+use models::FilmModalVisibility;
 
 fn main() {
     // Launch the web application using the App component as the root.
@@ -13,6 +14,8 @@ fn main() {
 
 // Define a component that renders a div with the text "Hello, world!"
 fn App(cx: Scope) -> Element {
+    use_shared_state_provider(cx, || FilmModalVisibility(false));
+    let is_modal_visible = use_shared_state::<FilmModalVisibility>(cx).unwrap();
     cx.render(rsx! {
        div {
            "Hello, world!"
@@ -26,7 +29,9 @@ fn App(cx: Scope) -> Element {
             Footer {}
             FilmModal {
                 on_create_or_update: move |_| {},
-                on_cancel: move |_| {},
+                on_cancel: move |_| {
+                    is_modal_visible.write().0 = false;
+                },
            }
        }
     })
