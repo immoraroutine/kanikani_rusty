@@ -38,7 +38,7 @@ async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::Shut
         // .route("/version", get(version))
         // .route("/health", get(health))
         .nest("/api", api_router)
-        .nest_service("/", index_file);
+        .route_service("/", index_file);
         // .nest_service("/static", static_dir);
 
     Ok(router.into())
