@@ -23,7 +23,7 @@ rm -rf api/shuttle/static static
 mkdir api/shuttle/static
 mkdir static
 cd front
-dioxus build --release
+dx build --release
 # local development 
 cp -r dist/* ../api/shuttle/static
 # production
