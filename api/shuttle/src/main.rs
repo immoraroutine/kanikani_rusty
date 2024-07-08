@@ -7,7 +7,7 @@ use axum::{
 use shuttle_runtime::CustomError;
 use sqlx::{Executor, PgPool};
 use std::sync::Arc;
-use tower_http::services::{ServeDir, ServeFile};
+use tower_http::services::ServeFile;
 
 #[shuttle_runtime::main]
 async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::ShuttleAxum {
@@ -29,17 +29,17 @@ async fn axum(#[shuttle_shared_db::Postgres] pool: PgPool) -> shuttle_axum::Shut
         .nest("/v1/films", films_router)
         .layer(Extension(film_repository));
 
-    let static_dir = ServeDir::new("static");
+    // let static_dir = ServeDir::new("static");
     let index_file = ServeFile::new("static/index.html");
 
-    println!("{:?}", static_dir);
+    // println!("{:?}", static_dir);
 
     let router = Router::new()
         // .route("/version", get(version))
         // .route("/health", get(health))
         .nest("/api", api_router)
-        .nest_service("/", index_file)
-        .nest_service("/static", static_dir);
+        .nest_service("/", index_file);
+        // .nest_service("/static", static_dir);
 
     Ok(router.into())
 }
